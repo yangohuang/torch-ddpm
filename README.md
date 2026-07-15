@@ -2,6 +2,10 @@
 
 苏剑林 Keras-DDPM 仓库的完整 PyTorch 版,每个文件与上级目录的 Keras 原版逐行对照,面向学习与调试。
 
+![DDPM samples on CelebA-HQ 128x128](assets/preview.png)
+
+*`ddpm.py` 训练 65 epoch(RTX 4090, batch 32)后的 EMA 权重采样,CelebA-HQ 128×128*
+
 ## 文件地图(建议学习顺序)
 
 | # | 文件 | 对照原版 | 内容 | 博客 |
