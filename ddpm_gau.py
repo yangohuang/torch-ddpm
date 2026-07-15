@@ -176,6 +176,7 @@ def main():
     ema = EMA(gau_model)
     base_lr = 1e-3
     initial_epoch = int(os.environ.get('DDPM_INITIAL_EPOCH', 0))
+    max_epochs = int(os.environ.get('DDPM_EPOCHS', 0))  # 0 = 无限（原版行为）
     global_step = initial_epoch * steps_per_epoch
     if initial_epoch > 0:
         ckpt = torch.load(CKPT, map_location=device)
@@ -223,6 +224,9 @@ def main():
                         'optimizer': optimizer.state_dict(), 'epoch': epoch}, CKPT)
             sample(os.path.join(SAMPLES_DIR, '%05d.png' % epoch))
             running, seen = 0.0, 0
+            if max_epochs and epoch >= max_epochs:
+                print(f'reached DDPM_EPOCHS={max_epochs}, training done')
+                break
             pbar = tqdm(total=steps_per_epoch, ncols=0, desc=f'Epoch {epoch + 1}')
 
 

@@ -39,10 +39,32 @@ python ddcm.py    # codebook 生成 + 编码重构 → test_ddcm1/2.png
 | `DDPM_DATA_DIR` | `/root/CelebA-HQ` | 数据根目录(下有 `train/` `valid/`) |
 | `DDPM_BATCH_SIZE` | 64 | 24G 显存建议 32 |
 | `DDPM_INITIAL_EPOCH` | 0 | >0 从 checkpoint 断点续训(含优化器和 EMA 状态) |
+| `DDPM_EPOCHS` | 0(无限) | 训练到指定 epoch 数后自动退出(自动队列必需) |
 | `DDPM_DEVICE` | 自动 | `cuda` / `cpu` |
 | `DDPM_MINSNR_GAMMA` | 0(关) | 设 5 开启 Min-SNR 加权(对照 `../ddpm_yg.py`) |
 
 VSCode 调试配置见 `../.vscode/launch.json`(CPU 小批次 profile 单步很快)。
+
+## 自动训练队列(train_all.sh)
+
+一条命令把全部可训练实现按顺序训完,结束后自动跑三个免训练采样脚本:
+
+```bash
+tmux new -d -s ddpm-train 'bash train_all.sh'   # 建议 tmux,断线不中断
+tail -f logs/queue.log                           # 总进度;各阶段明细在 logs/<name>.log
+```
+
+当前训练计划(RTX 4090 24G,batch 32,2026-07-15 启动于训练机):
+
+| 顺序 | 脚本 | 策略 | epochs | 预计时长 | 产物 |
+|---|---|---|---|---|---|
+| 1 | `ddpm.py` | **Min-SNR γ=5** | 100 | ~11h | `model.pt` |
+| 2 | `ddpm2.py` | 原版 | 80 | ~15h | `model2.pt` |
+| 3 | `ddpm_gau.py` | 原版 | 80 | ~12h | `model_gau.pt` |
+| 4 | `flow_matching.py` | 原版 | 100 | ~11h | `model_fm.pt` |
+| 5 | `ddim.py` / `adpm.py` / `ddcm.py` | 采样(复用 model.pt) | - | 分钟级 | test*.png |
+
+容错设计:某一阶段失败不阻塞后续;检测到 CUDA OOM 时自动降 batch 16 并从最近 checkpoint 续训;Min-SNR 目前只在 `ddpm.py` 实现,其余三个为原版训练策略。
 
 ## 与 Keras 版的对应关系(以 ddpm.py 为例)
 
