@@ -1,6 +1,8 @@
 # torch-ddpm — Keras-DDPM 全家桶的 PyTorch 移植
 
-苏剑林 Keras-DDPM 仓库的完整 PyTorch 版,每个文件与上级目录的 Keras 原版逐行对照,面向学习与调试。
+> A faithful PyTorch port of [Su Jianlin (苏剑林)'s Keras-DDPM](https://github.com/bojone/Keras-DDPM) suite — DDPM / DDIM / Analytic-DPM / DDCM / GAU-Transformer / Flow Matching — with line-by-line correspondence to the Keras originals and all intentional differences documented. The originals target TF 1.15, which is nearly impossible to set up in 2026; this port runs on any modern PyTorch.
+
+苏剑林 Keras-DDPM 仓库的完整 PyTorch 版,每个文件与 Keras 原版逐行对照,面向学习与调试。原版依赖 TF 1.15(2026 年已几乎无法配环境),本版在任意现代 PyTorch 上可跑。
 
 ![DDPM samples on CelebA-HQ 128x128](assets/preview.png)
 
