@@ -49,6 +49,7 @@ def encode(net, path, n=4):
     选出的索引序列就是图片的离散编码;本函数同时输出 [原图|重构图] 对照
     """
     paths = list_pictures(os.path.join(data_dir, 'train'))
+    paths += list_pictures(os.path.join(data_dir, 'valid'))  # 与 Keras 版同源(train+valid)
     picks = np.random.choice(len(paths), n**2, replace=False)
     x_target = torch.stack([
         torch.from_numpy(imread(paths[i])).permute(2, 0, 1) for i in picks
