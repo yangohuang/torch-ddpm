@@ -2,8 +2,13 @@
 # 生成扩散模型DDPM —— PyTorch 版，逐行对照移植自 ../ddpm.py（苏剑林 Keras 原版）
 # 保持一致的部分：U-Net 结构（skip 用 Add、无 Attention）、噪声调度、l2 损失（逐像素求和）、
 #                LAMB 优化器 + 分段线性 lr（4000 步 warmup）+ EMA(0.9999)、DDPM 采样循环
-# 有意的差异：GroupNorm 用 torch 原生实现（分组方式为连续分块，原版为隔 32 交错，统计上等价）；
-#            数据加载用 DataLoader 多进程（原版单线程生成器）
+# 有意的差异：GroupNorm 用 torch 原生实现（分组方式为连续分块，原版为隔 32 交错）；
+#            数据加载用 DataLoader 多进程（原版单线程生成器）；
+#            LAMB 为紧凑手写实现（非 bert4keras 逐行等价；且原版 exclude=['Norm','bias']
+#            因大小写敏感匹配实际未生效，本版按论文意图真正排除了 norm 参数）；
+#            EMA 影子权重用当前权重初始化、无偏差校正（bert4keras 为零初始化+apply 时校正，
+#            两者在训练前几千步的 EMA 采样有差异，收敛后一致）；
+#            未移植原版的线性插值 sample_inter（DDIM 版见 ddim.py 的球面插值）
 # 用法：DDPM_DATA_DIR=/home/yg/data/CelebA-HQ python ddpm.py
 #/home/yg/data/CelebA-HQ
 # 环境变量：DDPM_DATA_DIR / DDPM_BATCH_SIZE / DDPM_INITIAL_EPOCH（断点续训）/ DDPM_DEVICE

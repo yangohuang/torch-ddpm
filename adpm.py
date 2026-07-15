@@ -26,9 +26,11 @@ FACTORS_CACHE = os.path.join(OUT_DIR, 'adpm_factors.npy')
 def estimate_factors(net, n_batches=5, batch_size=64):
     """对每个 t:用真实图片造 x_t,估计 E||eps_pred||^2,得方差修正项 factors[t]"""
     paths = list_pictures(os.path.join(data_dir, 'train'))
+    paths += list_pictures(os.path.join(data_dir, 'valid'))  # 与 Keras 版同源(train+valid)
     loader = DataLoader(FaceDataset(paths), batch_size=batch_size, shuffle=True,
                         num_workers=4, drop_last=True)
-    # 预取 n_batches 份数据,循环给每个 t 用(与 Keras 版 steps=5 等价的样本量)
+    # 预取 n_batches 份数据,循环给每个 t 用(样本量与 Keras 版 steps=5 等价;
+    # 差异:Keras 每个 t 重新抽图,此处固定 5 个 batch 复用于所有 t,方差略小)
     batches = []
     for x0 in loader:
         batches.append(x0.to(device))

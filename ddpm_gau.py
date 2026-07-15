@@ -57,8 +57,10 @@ def apply_rotary(sinusoidal, x):
 
 
 class RMSNorm(nn.Module):
-    """LayerNormalization(zero_mean=False, offset=False):只除均方根、只留 scale"""
-    def __init__(self, dim, eps=1e-12):
+    """LayerNormalization(zero_mean=False, offset=False):只除均方根、只留 scale
+    eps=1e-7 对齐 bert4keras 默认(epsilon or K.epsilon() = 1e-7)
+    """
+    def __init__(self, dim, eps=1e-7):
         super().__init__()
         self.weight = nn.Parameter(torch.ones(dim))
         self.eps = eps
@@ -81,8 +83,8 @@ class GAU(nn.Module):
         self.units = units
 
     def forward(self, x, pos):
-        u, v, z = self.i_dense(x).split([self.units, self.units, self.key_size], dim=-1)
-        u, v = F.silu(u), F.silu(v)
+        # bert4keras 的 i_dense 对整个投影输出施加 swish(含 q/k 路径的 z),此处保持一致
+        u, v, z = F.silu(self.i_dense(x)).split([self.units, self.units, self.key_size], dim=-1)
         q = z * self.q_scaleoffset[0] + self.q_scaleoffset[1]
         k = z * self.k_scaleoffset[0] + self.k_scaleoffset[1]
         q, k = apply_rotary(pos, q), apply_rotary(pos, k)

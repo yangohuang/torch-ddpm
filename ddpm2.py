@@ -20,12 +20,13 @@ from torch.utils.data import DataLoader
 from tqdm import tqdm
 
 from ddpm import (
-    EMA, LAMB, FaceDataset, T, alpha, bar_alpha, bar_beta, beta, batch_size,
+    EMA, LAMB, FaceDataset, T, alpha, bar_alpha, bar_beta, beta,
     data_dir, device, imwrite, list_pictures, make_conv, make_dense,
     piecewise_linear_lr, sigma, steps_per_epoch, variance_scaling_,
 )
 
 img_size = 128
+batch_size = int(os.environ.get('DDPM_BATCH_SIZE', 32))  # Keras 原版 ddpm2 硬编码 32(模型更大)
 embedding_size = 128
 channels = [1, 1, 2, 2, 4, 4]
 blocks = 2
