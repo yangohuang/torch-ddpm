@@ -6,7 +6,7 @@
 
 ![DDPM samples on CelebA-HQ 128x128](assets/preview.png)
 
-*`ddpm.py` 训练 65 epoch(RTX 4090, batch 32)后的 EMA 权重采样,CelebA-HQ 128×128*
+*同一 U-Net 架构在 Keras 原版下训练 204 epoch(RTX 4090, batch 32)的 EMA 采样,CelebA-HQ 128×128。torch 版与 Keras 版已验证逐 epoch loss 吻合(见下文),权重因 GroupNorm 分组差异不可互载,torch 版自训 65 epoch 的采样见 `samples/`。*
 
 ## 文件地图(建议学习顺序)
 
