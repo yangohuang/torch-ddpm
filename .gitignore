@@ -1,0 +1,16 @@
+# python
+__pycache__/
+*.pyc
+
+# model checkpoints (hundreds of MB)
+*.pt
+
+# adpm factors cache
+*.npy
+
+# training sample grids & sampling outputs
+samples/
+samples2/
+samples_fm/
+samples_gau/
+*.png
