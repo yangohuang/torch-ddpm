@@ -9,8 +9,8 @@
 #            EMA 影子权重用当前权重初始化、无偏差校正（bert4keras 为零初始化+apply 时校正，
 #            两者在训练前几千步的 EMA 采样有差异，收敛后一致）；
 #            未移植原版的线性插值 sample_inter（DDIM 版见 ddim.py 的球面插值）
-# 用法：DDPM_DATA_DIR=/path/to/data/CelebA-HQ python ddpm.py
-#/path/to/data/CelebA-HQ
+# 用法：DDPM_DATA_DIR=/path/to/CelebA-HQ python ddpm.py
+#/path/to/CelebA-HQ
 # 环境变量：DDPM_DATA_DIR / DDPM_BATCH_SIZE / DDPM_INITIAL_EPOCH（断点续训）/ DDPM_DEVICE
 '''
 ───────────────────────────────────────────────┬────────────────────────────────────────────────────────────────────────────────────────────┐
