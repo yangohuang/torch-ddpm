@@ -26,7 +26,7 @@
 
 ```bash
 # 训练基础模型(其余采样脚本都依赖它)
-DDPM_DATA_DIR=/path/to/data/CelebA-HQ DDPM_BATCH_SIZE=32 python ddpm.py
+DDPM_DATA_DIR=/path/to/CelebA-HQ DDPM_BATCH_SIZE=32 python ddpm.py
 
 # 训练好后(model.pt 存在):
 python ddim.py    # DDIM 快速采样 + 插值 → test.png / test_inter.png
